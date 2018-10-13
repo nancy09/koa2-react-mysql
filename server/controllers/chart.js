@@ -1,5 +1,5 @@
 module.exports = async (ctx) => {
-  const title = 'chart'
+  const title = 'echarts'
   await ctx.render('chart', {
     title
   })

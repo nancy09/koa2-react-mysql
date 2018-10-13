@@ -12,7 +12,7 @@ const chartConfig = (time = [], data = []) => {
   return {
     backgroundColor: '#383546',
     title: {
-      text: '一天温度',
+      text: '深圳实时温度',
       left: 'center',
       top: 20,
       textStyle: {
@@ -152,7 +152,7 @@ export default class LineChart extends Component {
       list.forEach(item => {
         const ds = item.ds;
         time.push(ds.substr(4, 2) + '-' + ds.substr(6, 2) + ' ' + ds.substr(8, 2)
-          + ':' + ds.substr(10, 2));
+          + ':' + ds.substr(10, 2) + ':' + ds.substr(12, 2));
         data.push(item.temperature);
       });
       return {

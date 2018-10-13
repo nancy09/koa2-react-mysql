@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     'index' : './client/src/pages/index/index.js',
     'chart': './client/src/pages/chart/chart.js',
+    'svg': './client/src/pages/svg/svg.js',
     vendor: ['react', 'react-dom', 'whatwg-fetch'],
   },
   output: {

@@ -4,7 +4,10 @@ import React from 'react'
 class App extends React.Component {
   render() {
     return (
-      <a href="/chart">Chart</a>
+      <ul>
+        <li><a href="/chart">echarts</a></li>
+        <li><a href="/svg">svg</a></li>
+      </ul>
     )
   }
 }
