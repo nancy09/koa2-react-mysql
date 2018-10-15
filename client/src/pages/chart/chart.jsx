@@ -6,6 +6,7 @@ import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/axis';
 import 'echarts/lib/component/axisPointer';
 import 'echarts/lib/component/markLine';
+import 'echarts/lib/component/dataZoom';
 import { chartApi } from '../../api/chart';
 
 const chartConfig = (time = [], data = []) => {
@@ -74,6 +75,9 @@ const chartConfig = (time = [], data = []) => {
         color: 'rgba(255,255,255,.8)',
         fontSize: 12
       },
+    }],
+    dataZoom: [{
+      type: 'inside',
     }],
     series: [{
       name: '温度',
