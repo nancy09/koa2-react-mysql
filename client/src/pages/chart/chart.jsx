@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import echarts from 'echarts/lib/echarts';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/title';
+import 'echarts/lib/component/legend';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/axis';
 import 'echarts/lib/component/axisPointer';
@@ -10,6 +11,7 @@ import 'echarts/lib/component/dataZoom';
 import { chartApi } from '../../api/chart';
 
 const chartConfig = (time = [], data = []) => {
+  const legendData = ['office', 'home'];
   return {
     backgroundColor: '#383546',
     title: {
@@ -17,9 +19,16 @@ const chartConfig = (time = [], data = []) => {
       left: 'center',
       top: 20,
       textStyle: {
-        color: '#ccc'
+        color: '#fff'
       }
     },
+    legend: {
+      show: true, 
+      itemWidth: 18, itemHeight: 12, itemGap: 13,
+      top: 40, right: '4%',
+      data: legendData, textStyle: { color: '#fff', fontSize: 12 },
+    },
+    color: ['#036BC8', '#28f8de'],
     grid: [{
       top: '20%',
       bottom: 0,
@@ -53,14 +62,14 @@ const chartConfig = (time = [], data = []) => {
 
     yAxis: [{
       type: 'value',
-      name: '℃',
+      name: '单位（℃）',
       nameLocation: 'end',
       nameGap: 24,
       nameTextStyle: {
         color: 'rgba(255,255,255,.5)',
         fontSize: 14
       },
-      min: 20,
+      min: -5,
       max: 40,
       gridIndex: 0,
       splitLine: {
@@ -80,23 +89,23 @@ const chartConfig = (time = [], data = []) => {
       type: 'inside',
     }],
     series: [{
-      name: '温度',
+      name: legendData[0],
       type: 'line',
       // smooth: true,
-      symbol: 'emptyCircle',
-      symbolSize: 4,
-      itemStyle: {
-        normal: {
-          color: '#fff'
-        }
-      },
-      data: data,
-      lineStyle: {
-        normal: {
-          color: '#28f8de',
-          width: 1
-        }
-      },
+      symbol: 'circle',
+      symbolSize: 5,
+      data: data[legendData[0]],
+      // itemStyle: {
+      //   normal: {
+      //     color: '#fff'
+      //   }
+      // },
+      // lineStyle: {
+      //   normal: {
+      //     color: '#036BC8',
+      //     width: 2
+      //   }
+      // },
       markLine: {
         silent: true,
         data: [{
@@ -111,11 +120,47 @@ const chartConfig = (time = [], data = []) => {
         },
         lineStyle: {
           normal: {
-            color: 'rgba(248,211,81,.7)'
+            color: '#4A95FF'
           }
         }
       },
-    }]
+    }, {
+        name: legendData[1],
+        type: 'line',
+        // smooth: true,
+        symbol: 'circle',
+        symbolSize: 5,
+        data: data[legendData[1]],
+        // itemStyle: {
+        //   normal: {
+        //     color: '#fff'
+        //   }
+        // },
+        // lineStyle: {
+        //   normal: {
+        //     color: '#28f8de',
+        //     width: 2
+        //   }
+        // },
+        markLine: {
+          silent: true,
+          data: [{
+            type: 'average',
+            name: '平均值'
+          }],
+          precision: 0,
+          label: {
+            normal: {
+              formatter: '平均值: \n {c}'
+            }
+          },
+          lineStyle: {
+            normal: {
+              color: '#2fd8ee'
+            }
+          }
+        },
+      }]
   };
 };
 
@@ -152,12 +197,20 @@ export default class LineChart extends Component {
     const chartId = this.state.chartId;
     const dataFarmat = (list) => {
       let time = [];
-      let data = [];
+      let data = {
+        office: [],
+        home: [],
+      };
       list.forEach(item => {
-        const ds = item.ds;
-        time.push(ds.substr(4, 2) + '-' + ds.substr(6, 2) + ' ' + ds.substr(8, 2)
-          + ':' + ds.substr(10, 2) + ':' + ds.substr(12, 2));
-        data.push(item.temperature);
+        if (item.device_id === 'esp32-office') {
+          data.office.push(item.temperature);
+          // 以office时间为准
+          const ds = item.ds;
+          time.push(ds.substr(4, 2) + '-' + ds.substr(6, 2) + ' ' + ds.substr(8, 2)
+            + ':' + ds.substr(10, 2) + ':' + ds.substr(12, 2));
+        } else if (item.device_id === 'esp32-home') {
+          data.home.push(item.temperature);
+        }
       });
       return {
         time,

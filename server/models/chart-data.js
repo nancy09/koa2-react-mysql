@@ -4,7 +4,7 @@ const chart = {
   async getData(options = {}) {
     let _sql = `
     select * from (
-    select * from sensor_data order by ds desc) aa order by ds`;
+    select * from sensor_data order by ds desc limit 50) aa order by ds`;
     let result = await dbUtils.query(_sql);
     // console.log('result', result)
     if (Array.isArray(result) && result.length > 0) {
